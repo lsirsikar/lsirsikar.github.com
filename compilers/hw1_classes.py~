@@ -1,0 +1,146 @@
+class PBF:
+    pass
+#    def parsing(self,stack,alpha):
+#        print "hi"
+#        x = stack.pop()
+#        if x == '|':
+#            self.__class__ = OR
+#            f2 = PBF.parsing(stack,alpha)
+#            f1 = PBF.parsing(stack,alpha)
+#            self.__init__(f1,f2)
+#            return self
+#        elif x == '&':
+#            self.__class__ = AND
+#            f2 = PBF.parsing(stack,alpha)
+#            f1 = PBF.parsing(stack,alpha)
+#            self.__init__(f1,f2)
+#            return self
+#        elif x == '!':
+#            self.__class__ = NOT
+#            f = PBF.parsing(stack,alpha)
+#            self.__init__(f)
+#            return self
+#        else:
+#            self.__class__ = PROP
+#            self.__init__(alpha.pop())
+#            return self
+        
+#    def parse(self,str_arr):
+#        stack = []
+#        alpha = []
+#        stack.append('_')
+#        alpha.append(str_arr[0])
+#        for i in range(1,len(str_arr)):
+#            if str_arr[i] == '!':
+#                stack.append('!')
+#            elif str_arr[i] == '|':
+#                stack.append('|')
+#            elif str_arr[i] == '&':
+#                stack.append('&')
+#            else:
+#                stack.append('_')
+#                alpha.append(str_arr[i])
+#        print stack
+#        print alpha
+#        return self.parsing(stack,alpha)
+
+class OR(PBF):
+    def __init__(self,f1,f2):
+        self.lchild = f1
+        self.rchild = f2
+    def __str__(self):
+        return str(self.lchild) + " " + str(self.rchild) + " |"
+    def isNNF(self):
+        return (self.lchild.isNNF() & self.rchild.isNNF())
+    def toNNF(self):
+        return self.lchild.toNNF()
+        return self.rchild.toNNF()
+
+class AND(PBF):
+    def __init__(self,f1,f2):
+        self.lchild = f1
+        self.rchild = f2
+    def __str__(self):
+        return str(self.lchild) + " " + str(self.rchild) + " &"
+    def isNNF(self):
+        return (self.lchild.isNNF() & self.rchild.isNNF())
+    def toNNF(self):
+        return self.lchild.toNNF()
+        return self.rchild.toNNF()
+    
+class NOT(PBF):
+    def __init__(self,f):
+        self.child = f
+    def __str__(self):
+        return str(self.child) + " !"
+    def isNNF(self):
+        if ( self.child.__class__ == OR or self.child.__class__ == AND or self.child.__class__ == NOT ):
+            return False
+        else:
+            return True
+    def toNNF(self):
+        if( self.child.__class__ == OR ):
+            return AND( NOT(self.child.lchild).toNNF(), NOT(self.child.rchild).toNNF() ).toNNF()
+        elif( self.child.__class__ == AND):
+            return OR ( NOT(self.child.lchild).toNNF(), NOT(self.child.rchild).toNNF() ).toNNF()
+
+class PROP(PBF):
+    def __init__(self,p):
+        self.prop = p
+    def __str__(self):
+        return self.prop
+    def isNNF(self):
+        return True
+    def toNNF(self):
+        return PROP
+
+def parse(str_arr):
+    print "hi"
+    stack = []
+    alpha = []
+    stack.append('_')
+    alpha.append(str_arr[0])
+    for i in range(1,len(str_arr)):
+        if str_arr[i] == '!':
+            stack.append('!')
+        elif str_arr[i] == '|':
+            stack.append('|')
+        elif str_arr[i] == '&':
+            stack.append('&')
+        else:
+            stack.append('_')
+            alpha.append(str_arr[i])
+    print stack
+    print alpha
+    
+    while(len(stack)!=0):
+        x = stack.pop()
+        if x == '&':
+            pbf = AND()
+            pbf.__init__()
+        elif x == '|':
+            pbf = OR()
+            
+        elif x == '!':    
+    
+
+x = AND(PROP("x"), NOT(OR(PROP("y"),PROP("z"))))
+y = AND(PROP("x"), AND(NOT(PROP("y")),NOT(PROP("z"))))
+#print x.__str__()
+if x.isNNF() == False:
+    print "False"
+else:
+    print "True"
+
+#print y.__str__()
+if y.isNNF() == False:
+    print "False"
+else:
+    print "True"
+
+x.toNNF()
+x.isNNF()
+
+str_arr = ['x', 'y', '!', 'z', '!', '|', '&']
+#z = PBF()
+parse(str_arr)

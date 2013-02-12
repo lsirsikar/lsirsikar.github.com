@@ -1,0 +1,31 @@
+def duplicate():
+    list = [1,2,3,4,2,5,6,7,8]
+    for i in range(0,len(list)):
+        for j in range(i+1,len(list)):
+            if(list[j] == list[i]):
+                print "i: %d" % i
+                print "j: %d" % j
+                return True;
+    return False
+    
+def def_use():
+    list =  [ ["x", []], ["y", ["y", "x"]], ["x", ["x","z"]] ]
+    arr = []
+    arr.append(list[0][0])
+    err = []
+    
+    for i in range(1,len(list)):
+        for j in range(0,len(list[i][1])):
+            if list[i][1][j] not in arr:
+                err.append(list[i][0])
+                arr.append(list[i][1][j])
+            if list[i][0] not in arr:
+                arr.append(list[i][0])
+    
+    print "printing arr:"
+    for i in range(0,len(err)):
+        print err[i]
+        print "\n"
+
+duplicate()
+def_use()
